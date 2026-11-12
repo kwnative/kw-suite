@@ -1,0 +1,61 @@
+# SPDX-FileCopyrightText: 2026 N.Leiten
+# SPDX-License-Identifier: GPL-3.0-only
+name: Build bundle artifacts
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: Plugin selection
+        type: choice
+        options: [stable, development]
+        default: stable
+
+permissions:
+  contents: read
+
+jobs:
+  bundle:
+    # A moved/deleted tag is not a new version; manual runs remain available.
+    if: github.event_name == 'workflow_dispatch' || (github.event.created == true && github.event.deleted == false)
+    runs-on: ubuntu-24.04
+    env:
+      PROFILE: ${{ inputs.profile || 'stable' }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Linux build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential mingw-w64 zip
+      - name: Check packaging fixtures
+        run: make test
+      - name: Initialize only selected pinned components
+        run: make checkout PROFILE="$PROFILE"
+      - name: Select version and UTC timestamp
+        id: metadata
+        shell: bash
+        run: |
+          if [[ "$GITHUB_REF_TYPE" == tag ]]; then
+            version="$GITHUB_REF_NAME"
+          else
+            version="ci-$(git rev-parse --short=12 HEAD)"
+          fi
+          printf 'version=%s\ntimestamp=%s\n' "$version" "$(date -u +%Y%m%d%H%M)" >> "$GITHUB_OUTPUT"
+      - name: Build binary and matching source artifacts
+        env:
+          VERSION: ${{ steps.metadata.outputs.version }}
+          BUILD_TIMESTAMP: ${{ steps.metadata.outputs.timestamp }}
+        run: make -j2 artifacts PROFILE="$PROFILE" VERSION="$VERSION" BUILD_TIMESTAMP="$BUILD_TIMESTAMP"
+      - name: Upload artifact set
+        uses: actions/upload-artifact@v4
+        with:
+          name: kw-plugins-${{ steps.metadata.outputs.version }}-${{ env.PROFILE }}-${{ steps.metadata.outputs.timestamp }}
+          path: dist/*
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30

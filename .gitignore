@@ -1,0 +1,22 @@
+# Composition outputs; individual repositories own their own ignore rules.
+/build/
+/dist/
+/out/
+# Unpublished experimental repository: add as a submodule only after its first commit.
+/kw_plugin_threading/
+# Local tooling, credentials and runtime artifacts are never composition sources.
+/.agents/
+/.codex/
+/.vscode/
+/AGENTS.md
+.env
+.env.*
+*.log
+*.dll
+*.exe
+*.o
+*.a
+*.bundle
+*.dmp
+*~
+.DS_Store

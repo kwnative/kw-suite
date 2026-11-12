@@ -1,0 +1,18 @@
+[submodule "kw_modloader"]
+	path = kw_modloader
+	url = ../kw_modloader.git
+[submodule "kw_plugin_ui"]
+	path = kw_plugin_ui
+	url = ../kw_plugin_ui.git
+[submodule "kw_plugin_gameplay"]
+	path = kw_plugin_gameplay
+	url = ../kw_plugin_gameplay.git
+[submodule "kw_plugin_pacing"]
+	path = kw_plugin_pacing
+	url = ../kw_plugin_pacing.git
+[submodule "kw_plugin_fps_patch"]
+	path = kw_plugin_fps_patch
+	url = ../kw_plugin_fps_patch.git
+[submodule "kw_plugin_aibot"]
+	path = kw_plugin_aibot
+	url = ../kw_plugin_aibot.git

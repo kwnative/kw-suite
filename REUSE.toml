@@ -1,0 +1,7 @@
+version = 1
+
+[[annotations]]
+path = [".gitignore", ".gitmodules", "README.md", "REUSE.toml", "Makefile", "profiles/**", "tools/**", ".github/**"]
+precedence = "closest"
+SPDX-FileCopyrightText = "2026 N.Leiten"
+SPDX-License-Identifier = "GPL-3.0-only"
