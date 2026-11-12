@@ -181,7 +181,7 @@ sha256sum -c kw-plugins-v0.1.0-stable-202611121230-SHA256SUMS
 ## GitHub Actions
 
 Run manual builds and download their artifacts from
-[Build bundle artifacts](https://github.com/kwnative/kw-suite/actions/workflows/artifacts.yml).
+[Build bundles and releases](https://github.com/kwnative/kw-suite/actions/workflows/artifacts.yml).
 
 The workflow builds automatically only when a **new `v*` tag** is pushed.
 Ordinary branch pushes, pull requests, moved tags and deleted tags do not build.
@@ -190,9 +190,18 @@ initializes only the chosen submodules, builds with two jobs, then uploads the
 four files from `dist/` as one Actions artifact set retained for 30 days.
 
 Tag builds use the tag as the version. Manual branch builds use `ci-<commit>`.
-This workflow has read-only repository permissions and does **not** create
-GitHub Releases or publish release assets. Actions artifact retention is not a
-permanent release archive; retain the matching sources when distributing binaries.
+After a successful new-tag build, the workflow also creates a
+[GitHub Release](https://github.com/kwnative/kw-suite/releases) and attaches all
+four files. Tags containing a hyphen, such as `v0.1.0-alpha.1`, are marked as
+prereleases and not latest. Other version tags produce normal releases.
+The build job requests `contents: write` for release creation and asset upload.
+The release stays a draft until all files have uploaded successfully. Existing
+releases and assets are not overwritten. A failed upload may leave a draft for
+inspection/removal before retrying.
+
+Manual runs produce Actions artifacts only, even when run against a tag.
+Actions artifact retention is not a permanent release archive; the tag-triggered
+Release retains the binary and matching sources together.
 The default checkout assumes public component repositories; private components
 need separately configured read access to those repositories.
 
@@ -222,6 +231,20 @@ make -j2 artifacts VERSION=v0.1.1
 Keep component histories independent. A release tag identifies one tested
 combination; it does not update itself when a component branch advances.
 Never use `git submodule update --remote` as part of release builds.
+
+## Tag and publish a release
+
+Commit and push the tested composition, then push an annotated version tag:
+
+```sh
+git push origin main
+git tag -a v0.1.0-alpha.1 -m 'KW Suite v0.1.0-alpha.1'
+git push origin v0.1.0-alpha.1
+```
+
+The workflow must be present in that tagged commit. Watch the Actions run; the
+prerelease appears after the build, checksum verification and uploads succeed.
+Use a new version tag for the next release instead of moving an existing tag.
 
 ## Manual installation
 

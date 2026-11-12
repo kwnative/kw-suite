@@ -65,3 +65,4 @@ artifacts: verify
 	    package "$(PROFILE)" "$(VERSION)" "$(BUNDLE_DIR)" "$(DIST_DIR)" $(COMPONENTS)
 test:
 	bash "$(REPOS_ROOT)/tools/test_release.sh"
+	bash "$(REPOS_ROOT)/tools/test_publish_release.sh"
