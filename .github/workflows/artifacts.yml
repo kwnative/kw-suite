@@ -6,12 +6,6 @@ on:
   push:
     tags: ['v*']
   workflow_dispatch:
-    inputs:
-      profile:
-        description: Plugin selection
-        type: choice
-        options: [stable, development]
-        default: stable
 
 permissions:
   contents: read
@@ -22,7 +16,7 @@ jobs:
     if: github.event_name == 'workflow_dispatch' || (github.event.created == true && github.event.deleted == false)
     runs-on: ubuntu-24.04
     env:
-      PROFILE: ${{ inputs.profile || 'stable' }}
+      PROFILE: stable
     steps:
       - uses: actions/checkout@v6
         with:

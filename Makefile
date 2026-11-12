@@ -4,11 +4,11 @@
 REPOS_ROOT := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 PROFILE ?= stable
 PROFILE_FILE := $(REPOS_ROOT)/profiles/$(PROFILE).mk
-ifeq ($(filter $(PROFILE),stable development),)
-$(error PROFILE must be stable or development)
+ifneq ($(PROFILE),stable)
+$(error PROFILE must be stable; unreleased components are not part of this suite)
 endif
 include $(PROFILE_FILE)
-PLUGINS := kw_plugin_ui kw_plugin_gameplay kw_plugin_pacing kw_plugin_fps_patch kw_plugin_aibot
+PLUGINS := kw_plugin_ui kw_plugin_gameplay kw_plugin_pacing kw_plugin_fps_patch
 ifneq ($(filter-out $(PLUGINS),$(BUNDLE_PLUGINS)),)
 $(error Unknown BUNDLE_PLUGINS entry: $(filter-out $(PLUGINS),$(BUNDLE_PLUGINS)))
 endif

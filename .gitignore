@@ -4,6 +4,7 @@
 /out/
 # Unpublished experimental repository: add as a submodule only after its first commit.
 /kw_plugin_threading/
+/kw_plugin_aibot/
 # Local tooling, credentials and runtime artifacts are never composition sources.
 /.agents/
 /.codex/

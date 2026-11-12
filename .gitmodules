@@ -13,6 +13,3 @@
 [submodule "kw_plugin_fps_patch"]
 	path = kw_plugin_fps_patch
 	url = ../kw_plugin_fps_patch.git
-[submodule "kw_plugin_aibot"]
-	path = kw_plugin_aibot
-	url = ../kw_plugin_aibot.git

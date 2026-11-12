@@ -10,7 +10,7 @@ each plugin owns its implementation, settings and optional cooperation contracts
 ```text
 Makefile                    # Build and composition targets
 .gitmodules                 # Component URLs; Git records their pinned commits
-profiles/                   # Stable and development plugin selections
+profiles/                   # Published plugin selections
 tools/                      # Source verification, archives and packaging fixtures
 .github/workflows/          # Linux builds and GitHub Actions artifact upload
 kw_modloader/               # Submodule: loader, runtime and engine SDK
@@ -26,10 +26,9 @@ dist/                       # Ignored binary/source archives and checksums
 | [kw_plugin_gameplay](https://github.com/kwnative/kw_plugin_gameplay) | Native input and Attack-Move preservation. |
 | [kw_plugin_pacing](https://github.com/kwnative/kw_plugin_pacing) | Native wait and timer-resolution policy. |
 | [kw_plugin_fps_patch](https://github.com/kwnative/kw_plugin_fps_patch) | Rendering framerate, interpolation and adaptive scheduling. |
-| [kw_plugin_aibot](https://github.com/kwnative/kw_plugin_aibot) | Managed bot processes, LAN routing and player-lawful model interfaces. |
 
-The unpublished threading repository is not a submodule or release component.
-It may remain locally in its ignored directory while under development.
+Unreleased local plugins are not submodules or release components. Their ignored
+working directories may remain alongside the published components for development.
 
 ## Linux prerequisites
 
@@ -45,11 +44,6 @@ The Windows compiler commands default to `i686-w64-mingw32-gcc`,
 `HOST_CXX` (default `c++`). Runtime compiler libraries are linked statically;
 Windows system DLLs remain required. No game installation or Wine is needed
 for building. Wine is only needed for runtime testing.
-
-The development profile additionally needs the x86_64 MinGW compiler for its
-external policy worker; the package above supplies both toolchains. Model tools
-and trained weights are outside the default process/lobby build; see that
-component's own documentation.
 
 Native Windows build-host support is future work. The current orchestration uses
 Bash/GNU tooling and produces Windows x86 runtime files from Linux.
@@ -112,12 +106,9 @@ checking out another bundle revision or running submodule update.
 | Profile | Selection |
 | --- | --- |
 | `stable` (default) | Loader, UI, gameplay, pacing and FPS. |
-| `development` | Stable selection plus AI process/lobby integration; no model weights. |
 
 ```sh
 make print-components PROFILE=stable
-make checkout PROFILE=development
-make -j2 bundle PROFILE=development
 # Local custom selection; optional cooperation follows this selection:
 make -j2 bundle BUNDLE_PLUGINS='kw_plugin_ui kw_plugin_pacing kw_plugin_fps_patch'
 ```
@@ -176,8 +167,8 @@ identical output across different compiler versions. Treat modified compiler
 flags/toolchains as a new build configuration requiring qualification.
 
 Packaging refuses uncommitted composition changes, changed component pins,
-dirty selected components and existing output filenames. Uncommitted work in
-unselected components does not block a stable package. Archive/remove an old
+dirty selected components and existing output filenames. Ignored private
+development directories are excluded from packaging. Archive/remove an old
 artifact set or choose another version before rebuilding the same names.
 Use the pinned SDK's normal `build/bin` and `build/lib` for release artifacts.
 
@@ -194,7 +185,7 @@ Run manual builds and download their artifacts from
 
 The workflow builds automatically only when a **new `v*` tag** is pushed.
 Ordinary branch pushes, pull requests, moved tags and deleted tags do not build.
-A manual run can choose `stable` or `development`. It checks the packaging fixtures,
+Manual runs build the same published `stable` selection. The job checks packaging fixtures,
 initializes only the chosen submodules, builds with two jobs, then uploads the
 four files from `dist/` as one Actions artifact set retained for 30 days.
 

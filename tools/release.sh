@@ -34,7 +34,7 @@ verify() {
 command=$1
 profile=$2
 shift 2
-[[ $profile == stable || $profile == development ]] || die 'unknown profile'
+[[ $profile == stable ]] || die 'unknown or unreleased profile'
 case $command in
     verify)
         components=("$@")
